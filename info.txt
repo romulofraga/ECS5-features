@@ -1,0 +1,1 @@
+"dev": "babel ./main.js -o ./bundle.js -w" // executa o babel no arquivo main.js e encaminha para o bundle.js e monitora o codigo.
