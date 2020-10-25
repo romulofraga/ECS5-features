@@ -27,19 +27,15 @@ class App {
   }
 
   async addRepository(event) {
-    event.preventDefault();
+    event.preventDefault(); // evita que a pagina recarregue ao pressionar o botão
 
     const repoInput = this.inputEl.value;
-
     if (repoInput.length === 0) return;
-
-    console.info("repositorio pesquisado: ", repoInput);
 
     this.setLoading();
 
     try {
       const response = await api.get(`/repos/${repoInput}`);
-
       const {
         name,
         description,
@@ -56,21 +52,19 @@ class App {
 
       this.inputEl.value = "";
 
-      // console.log(this.repositories);
-
       this.render();
+
     } catch (error) {
       alert("O REPOSITÓRIO NAO EXISTE", error);
       this.inputEl.value = "";
     }
-
     this.setLoading(false);
   }
 
   render() {
-    this.listEl.innerHTML = "";
+    this.listEl.innerHTML = ""; // zera a lista no documento
 
-    this.repositories.forEach((itemRepo) => {
+    this.repositories.forEach((itemRepo, index) => {
       let imgEl = document.createElement("img"); //cria um elemento  <img></img>
       imgEl.setAttribute("src", itemRepo.avatar_url);
 
@@ -85,14 +79,29 @@ class App {
       linkEl.setAttribute("href", itemRepo.html_url);
       linkEl.appendChild(document.createTextNode("Acessar Repositório"));
 
+      let removeLinkEl = document.createElement("a");
+      removeLinkEl.setAttribute("href", "#");
+      removeLinkEl.setAttribute("id", "remove-element");
+      removeLinkEl.appendChild(document.createTextNode("Excluir repositório"));
+      
+      removeLinkEl.onclick = (index) => { //quando o item for clicado, vai passar o index pra deleteRepo.
+      this.deleteRepo(index);
+      }
+
       let listItemEl = document.createElement("li");
+      listItemEl.setAttribute("id", `repo-${index}`);
       listItemEl.appendChild(imgEl);
       listItemEl.appendChild(titleEl);
       listItemEl.appendChild(descriptionEl);
       listItemEl.appendChild(linkEl);
+      listItemEl.appendChild(removeLinkEl);
 
       this.listEl.appendChild(listItemEl);
     });
+  }
+  deleteRepo(index){
+    document.getElementById(`repo-${index}`).remove(); // tira o elemento da tela
+    this.repositories.slice(index, 1) // tira o elemento correspondente ao indice
   }
 }
 
