@@ -9,6 +9,7 @@ class App {
     this.inputEl = document.getElementById("repo-input");
 
     this.registerHandlers();
+    this.deleteRepo;
   }
   registerHandlers() {
     this.formEl.onsubmit = (event) => this.addRepository(event);
@@ -81,7 +82,7 @@ class App {
 
       let removeLinkEl = document.createElement("a");
       removeLinkEl.setAttribute("href", "#");
-      removeLinkEl.setAttribute("id", "remove-element");
+      removeLinkEl.setAttribute("onclick", `deleteRepo(${index})`);
       removeLinkEl.appendChild(document.createTextNode("Excluir repositório"));
       
       removeLinkEl.onclick = (index) => { //quando o item for clicado, vai passar o index pra deleteRepo.
@@ -100,8 +101,8 @@ class App {
     });
   }
   deleteRepo(index){
-    document.getElementById(`repo-${index}`).remove(); // tira o elemento da tela
-    this.repositories.slice(index, 1) // tira o elemento correspondente ao indice
+    this.repositories.splice(index,1);
+    this.render()
   }
 }
 
